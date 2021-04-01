@@ -1,6 +1,11 @@
 const Handlebars=require("handlebars")
 const puppeteer=require("puppeteer")
 const fs=require("fs")
+const printer=require("pdf-to-printer")
+
+// Tsy ilaina fa azonla atao ihany ra tena tsy mahita fika ela
+// Satria protocol http dia efa tafa
+/*----------------------------------------*/
 
 let getTemplate=async(path,data)=>{
     try{
@@ -15,6 +20,9 @@ let getTemplate=async(path,data)=>{
     }
 }
 
+// Migenerer PDF
+/*---------------------------------------*/
+
 let generatePdf=async (path,option)=>{
     const browser=puppeteer.launch()
     try{
@@ -27,16 +35,19 @@ let generatePdf=async (path,option)=>{
         throw e
     }
 }
-getTemplate("index.html",{date:"01/04/2021",numero:"C256",heure:"15:52"}).then((res)=>{
+
+/*-------------------------------------*/
+getTemplate("index.html",{date:"01/04/2021",numero:"C256",heure:"15:52"})
+.then(async (res)=>{
     let url="file://"+process.cwd()+"/"+res
-    generatePdf(url,{
-        format:'A4',
-        path:"test.pdf"
-    }).then(()=>{
-
-    }).catch((e)=>{
-
-    }).finally(()=>{
+    let option={format:'A4',path:"test.pdf"}
+    try{
+        await generatePdf(url,option)
+        await printer.print(option.path)
+        console.log("Fichier imprimé")
+    }catch(e){
+        console.log(e)
+    }finally{
         fs.unlinkSync(res)
-    })
+    }
 })
