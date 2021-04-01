@@ -30,7 +30,7 @@ let generatePdf=async (path,option)=>{
 getTemplate("index.html",{date:"01/04/2021",numero:"C256",heure:"15:52"}).then((res)=>{
     let url="file://"+process.cwd()+"/"+res
     generatePdf(url,{
-        format:"A4",
+        format:'A4',
         path:"test.pdf"
     }).then(()=>{
 
